@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		body {
+			text-align: center;
+			font-family: "Helvetica Neue", "Segoe UI", "Helvetica", "Arial", "Open Sans", sans-serif;
+		}
+		button {
+			font-size: 18pt;
+		}
+		table {
+			border: 1px solid black;
+			border-collapse: collapse;
+			empty-cells: show;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		td {
+			border: 1px solid black;
+			height: 50px;
+			width: 50px;
+			text-align: center;
+		}
+		td.column2, td.column5 {
+			border-right-width: 3px;
+		}
+		tr#row2 td, tr#row5 td {
+			border-bottom-width: 3px;
+		}
+		ul.nav {
+			list-style-type: none;
+		}
+		ul.nav li {
+			display:inline;
+			padding: 5px;
+		}
+		ul.nav li:not(:first-child) {
+			border-left: 1px solid black;
+		}
+		ul.nav li a {
+			text-decoration: none;
+			color: black;
+		}
+	</style>
+</head>
+
+<body>
+	<h1>Nathan's Sudoku Solver</h1>
+	<ul class="nav" id="main">
+		<li><a id="easypuzzle" href="#">Insert Easy Puzzle</a></li>
+		<li><a id="mediumpuzzle" href="#">Insert Medium Puzzle</a></li>
+		<li><a id="hardpuzzle" href="#">Insert Hard Puzzle</a></li>
+		<li><a id="clearboard" href="#">Clear the Board</a></li>
+	</ul>
+	<table id="sudokuboard">
+		<tr id="row0">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+		<tr id="row1">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+		<tr id="row2">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+		<tr id="row3">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+		<tr id="row4">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+		<tr id="row5">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+		<tr id="row6">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+		<tr id="row7">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+		<tr id="row8">
+			<td class="column0" contenteditable="true"></td>
+			<td class="column1" contenteditable="true"></td>
+			<td class="column2" contenteditable="true"></td>
+			<td class="column3" contenteditable="true"></td>
+			<td class="column4" contenteditable="true"></td>
+			<td class="column5" contenteditable="true"></td>
+			<td class="column6" contenteditable="true"></td>
+			<td class="column7" contenteditable="true"></td>
+			<td class="column8" contenteditable="true"></td>
+		</tr>
+	</table>
+	<p id="solveparagraph"><button href="#" id="solve">Solve This Puzzle</button></p>
+	<ul class="nav" id="bottom">
+		<li><a href="readme.html">ReadMe Instructions</a></li>
+		<li><a href="sudoku.js">JavaScript Source Code</a></li>
+		<li><a href="http://websudoku.com">Get Puzzles from WebSudoku</a></li>
+	</ul>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="sudoku.js"></script>
+</body>
+</html>
