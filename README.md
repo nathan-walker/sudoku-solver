@@ -25,7 +25,7 @@ Open the "sudoku-solver" folder and double-click on the "sudoku.html" file to op
 
 If you get some warning about allowing scripts, make sure that you allow them.  These scripts power the application.
 
-####Using Google Drive
+####Using Hosted Version
 The Sudoku Solver can also be accessed hosted on the Internet like any other web site.  You can access this at: [http://code.nwalker.org/sudoku-solver](http://code.nwalker.org/sudoku-solver)
 
 ## Using the Application
