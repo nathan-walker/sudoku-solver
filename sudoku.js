@@ -1,9 +1,14 @@
 /*
  * Nathan's Sudoku Solver
  * Copyright 2014 - Nathan Walker
- * Developed for the Westmoreland County Gifted Coalition/Gannon University Programming Contest
+ * Licensed under MIT License
+ * Developed for the Gannon University Programming Contest
  * Capable of solving most Easy, Medium, and Hard puzzles from WebSudoku
 */ 
+
+/*
+ * EXTENSIONS TO THE JS ARRAY OBJECT
+*/
 
 // Adds a function to all array objects that adds all items passed 
 // to the array that aren't already present
@@ -25,7 +30,12 @@ Array.prototype.removeValues = function (values) {
 	}, this);
 };
 
-// Accepts a board object and prints it to the JavaScript console 
+/*
+ * I/O FUNCTIONS FOR THE SUDOKU BOARDS
+*/
+ 
+// Accepts a board object and prints it to the JavaScript console
+// Used in the initial debugging of the program before the GUI was finished
 function logSudokuBoard(board) {
 	var i;
 	var n;
@@ -48,7 +58,7 @@ function logSudokuBoard(board) {
 	}
 }
 
-// Accepts a board object and prints it to the screen
+// Accepts a board object and outputs it to the HTML page
 function printSudokuBoard(board) {
 	var i;
 	var n;
@@ -64,7 +74,7 @@ function printSudokuBoard(board) {
 	}
 }
 
-// Takes input from the page and inserts it into the myBoard object
+// Takes input from the page and inserts it into the myBoard variable
 function loadSudokuBoard() {
 	$("#valuesremoved").remove();
 	myBoard = makeBoard();
@@ -83,10 +93,16 @@ function loadSudokuBoard() {
 			}
 		});
 	});
+	
+	// Put a notice if any values were removed from the board
 	if (removedValues === true) {
 		$("#solveparagraph").after("<p id='valuesremoved'>If there were values that were not numbers 0-9, they were removed</p>");
 	}
 }
+
+/*
+ * MAKER FUNCTIONS FOR THE CLASSES USED
+*/
 
 // Creates a row object
 // Arguments: row number followed by values for squares if you provide them
@@ -95,10 +111,12 @@ var makeRow = function(rn) {
 	
 	var i;
 	
+	// Make the 9 square for the row	
 	for (i = 0; i < 9; i += 1) {
 		that[i] = makeSquare(rn, i, getBoxNumber(rn, i), (arguments[i+1] ? arguments[i+1].getValue() : null));
 	}
 	
+	// Returns an array of all numbers present in the row
 	that.getAllValues = function() {
 		var results = [];
 		
@@ -113,12 +131,24 @@ var makeRow = function(rn) {
 		return makeRow(rn, that[0].clone(), that[1].clone(), that[2].clone(), that[3].clone(), that[4].clone(), that[5], that[6].clone(), that[7].clone(), that[8].clone());
 	};
 	
+	// Return a row object
 	return that;
 	
 };
 
 
-// Gets the number of a box, referenced 0-8 going top to bottom and left to right
+// Gets the number of a box based on row/column coordinates
+// referenced 0-8 going top to bottom and left to right
+// The 9 boxes on the Sudoku board would be:
+/*
+ * 0 | 1 | 2
+ *-----------
+ * 3 | 4 | 5
+ *-----------
+ * 6 | 7 | 8
+ *
+*/
+
 function getBoxNumber(r, c) {
 	if (r >= 0 && r <= 2) {
 		if (c >= 0 && c <= 2) {
@@ -177,14 +207,12 @@ var makeBoard = function() {
 		that[i] = (arguments[i] || makeRow(i));
 	}
 	
-	/**
-		* @method that[0] - First row
-	*/
-	
+	// Gets all numbers in a specific row
 	that.getRowValues = function (row) {
 		return that[row].getAllValues();
 	};
 	
+	// Gets all numbers in a specific column
 	that.getColumnValues = function (column) {
 		var results = [];
 		for (i = 0; i < 9; i += 1) {
@@ -194,6 +222,7 @@ var makeBoard = function() {
 		return results;
 	};
 	
+	// Returns the rows that are included in a certain box
 	that.getBoxRows = function (box) {
 		var rows = [];
 		if (box >= 0 && box < 3) {
@@ -212,6 +241,7 @@ var makeBoard = function() {
 		return rows;
 	}
 	
+	// Returns the columns that are included in a certain box
 	that.getBoxColumns = function (box) {
 		var columns = [];
 		if (box % 3 === 0) {
@@ -230,7 +260,8 @@ var makeBoard = function() {
 		return columns;
 	}
 	
-	that.getBoxValues = function (box) {
+	// Returns all of the numbers in a specific box
+	that.getBoxValues = function(box) {
 		var results = [];
 		var columns = that.getBoxColumns(box);
 		var rows = that.getBoxRows(box);
@@ -249,6 +280,7 @@ var makeBoard = function() {
 		return makeBoard(that[0].clone(), that[1].clone(), that[2].clone(), that[3].clone(), that[4].clone(), that[5], that[6].clone(), that[7].clone(), that[8].clone());
 	};
 	
+	// Get the number of boxes that are filled
 	that.getFilledCount = function() {
 		var rows = [0,1,2,3,4,5,6,7,8];
 		var columns = [0,1,2,3,4,5,6,7,8];
@@ -334,6 +366,10 @@ var makeSquare = function(row, column, box, value) {
 	return that;
 };
 
+/* 
+ * SOLVER FUNCTIONS
+*/
+
 // The most important function.
 // Attempts to solve a Sudoku board object
 var solveSudokuBoard = function(board) {
@@ -344,6 +380,7 @@ var solveSudokuBoard = function(board) {
 	
 	console.log(filledCount+" squares filled to begin");
 	
+	// Makes sure the Sudoku board is possible.
 	function checkSudokuBoard() {
 		rows.forEach(function (row, rowindex, rowarray) {
 			var values = [];
@@ -352,6 +389,7 @@ var solveSudokuBoard = function(board) {
 				var currentValue = board[row][column].getValue();
 								
 				if (currentValue) {
+					// Check if a value is already included in the row
 					if (values.indexOf(currentValue) !== -1) {
 						throw {
 							name: "ImpossibleBoardError"
@@ -370,6 +408,7 @@ var solveSudokuBoard = function(board) {
 				var currentValue = board[row][column].getValue();
 								
 				if (currentValue) {
+					// Check if a value is already included in the column
 					if (values.indexOf(currentValue) !== -1) {
 						throw {
 							name: "ImpossibleBoardError"
@@ -391,7 +430,7 @@ var solveSudokuBoard = function(board) {
 				columns.forEach(function (column, columnindex, columnarray) {
 					
 					var currentValue = board[row][column].getValue();
-									
+					// Check if a value is already included in the box				
 					if (currentValue) {
 						if (values.indexOf(currentValue) !== -1) {
 							throw {
@@ -407,6 +446,7 @@ var solveSudokuBoard = function(board) {
 
 	}
 	
+	// Fills in any squares that have only one possible value
 	function fillPossibleSquares() {
 		rows.forEach(function (row, rowindex, rowarray) {
 			columns.forEach(function (column, columnindex, columnarray) {
@@ -421,10 +461,9 @@ var solveSudokuBoard = function(board) {
 				}
 			});
 		});
-		//logSudokuBoard(myBoard);
-		//console.log(filledCount+" squares filled");
 	}
 	
+	// Checks if number can only go in one possible spot in a row
 	function fillByRow(number) {
 		
 		rows.forEach(function (row, rowindex, rowarray) {
@@ -447,6 +486,7 @@ var solveSudokuBoard = function(board) {
 
 	}
 	
+	// Checks if number can only go in one possible spot in a column
 	function fillByColumn(number) {
 		columns.forEach(function (column, columnindex, columnarray) {
 			var potentials = [];
@@ -468,6 +508,7 @@ var solveSudokuBoard = function(board) {
 		
 	}
 	
+	// Checks if number can only go in one possible spot in a box
 	function fillByBox(number) {
 		
 		var boxes = [0,1,2,3,4,5,6,7,8];
@@ -496,9 +537,13 @@ var solveSudokuBoard = function(board) {
 		});
 		
 	}
-		
+	
+	// The last value of filledCount.  Included to prevent infinite loops.	
 	var lastValue = 0;
+	
+	// Number of solve attempts
 	var iterations = 0;
+	
 	while (lastValue !== filledCount && filledCount < 81) {
 		lastValue = filledCount;
 		try {
@@ -534,12 +579,15 @@ var solveSudokuBoard = function(board) {
 
 }
 
+/* 
+ * MAIN FUNCTIONS OF THE SCRIPT
+*/
 
 // Creates the main board object
 var myBoard = makeBoard();
 
 
-// Loads a pre-set puzzle from WebSudoku.com 
+// Loads a pre-set, hard-coded puzzle from WebSudoku.com 
 function loadHardPuzzle() {
 	myBoard[0][8].setValue(7);
 	myBoard[1][0].setValue(1);
@@ -571,7 +619,7 @@ function loadHardPuzzle() {
 	myBoard[8][0].setValue(3);
 }
 
-// Loads a pre-set puzzle from WebSudoku.com 
+// Loads a pre-set, hard-coded puzzle from WebSudoku.com 
 function loadMediumPuzzle() {
 	myBoard[0][1].setValue(5);
 	myBoard[0][2].setValue(7);
@@ -606,7 +654,7 @@ function loadMediumPuzzle() {
 }
 
 
-// Loads a pre-set puzzle from WebSudoku.com 
+// Loads a pre-set, hard-coded puzzle from WebSudoku.com 
 function loadEasyPuzzle() {
 	myBoard[0][0].setValue(3);
 	myBoard[0][1].setValue(7);
@@ -656,6 +704,7 @@ function loadEasyPuzzle() {
 }
 
 // The rest of the script binds actions to the buttons on the page
+// Requires basic jQuery
 $("#solve").click(function() {
 	loadSudokuBoard(myBoard);
 	solveSudokuBoard(myBoard);
